@@ -1,0 +1,15 @@
+.layout {
+  display: grid;
+  grid-template-rows: 70px auto;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+
+  &-header {
+    width: 100%;
+    min-width: 150px;
+  }
+
+  &-content {
+    width: 100%;
+  }
+}
