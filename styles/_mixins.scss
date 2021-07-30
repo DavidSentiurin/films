@@ -1,0 +1,14 @@
+@mixin text-body {
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+}
+
+/**
+  * Getting rid of the bug on phones with bangs when using height: 100vh;
+  * BUG - 100vh is not 100% on display height.
+  */
+@mixin correct-100vh-height {
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+}

@@ -1,0 +1,27 @@
+@use '../../varibles' as *;
+@use '../../mixins' as mixins;
+
+.layout {
+  display: grid;
+  grid-template-rows: 70px auto;
+  @include mixins.correct-100vh-height;
+
+  &-header {
+    width: 100%;
+    min-width: 150px;
+  }
+
+  &-content-wrapper {
+    display: grid;
+    grid-template-columns: minmax(150px, 200px) auto;
+    overflow-y: auto;
+  }
+
+  &-navbar {
+    box-shadow: $box-shadow;
+  }
+
+  &-content {
+    width: 100%;
+  }
+}
