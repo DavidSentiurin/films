@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from '../../../../styles/components/Layout/Header/Header.module.scss';
 import Link from 'next/link';
-import { ROUTES } from '../../../../constants';
+import { ROUTES } from '../../../constants';
 import { SearchInput } from './index';
 import { ISearchInputProps } from './SearchInput';
 

@@ -6,7 +6,7 @@ import NProgress from 'nprogress';
 import { SearchOutlined } from '@ant-design/icons';
 import { Layout } from '../components';
 import { NavLinks } from '../components/Layout/NavBar';
-import { ROUTES } from '../../constants';
+import { ROUTES } from '../constants';
 
 // progress bar on all pages
 Router.events.on('routeChangeStart', () => NProgress.start());
@@ -54,6 +54,10 @@ export const LayoutContainer: React.FC<ILayoutContainer> = ({ children }) => {
     {
       path: ROUTES.FAVORITES.PATH,
       label: ROUTES.FAVORITES.NAME,
+    },
+    {
+      path: ROUTES.SIGN_IN.PATH,
+      label: ROUTES.SIGN_IN.NAME,
     },
   ];
 

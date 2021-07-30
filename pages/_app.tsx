@@ -1,6 +1,6 @@
 import '../styles/globals.scss';
 import type { AppProps } from 'next/app';
-import { LayoutContainer } from '../views/containers';
+import { LayoutContainer } from '../common/containers';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
