@@ -5,7 +5,7 @@ import { ROUTES } from '../constants';
 const { Title } = Typography;
 
 export default function Popular() {
-  const pageName = ROUTES.POPULAR.name;
+  const pageName = ROUTES.POPULAR.NAME;
 
   return (
     <div className={''}>

@@ -1,13 +1,31 @@
 export const ROUTES = {
   NOW_WATCHING: {
-    path: '/now-watching',
-    name: 'Now watching',
-    authorized: false,
+    PATH: '/now-watching',
+    NAME: 'Now watching',
+    AUTHORIZED: true,
   },
 
   POPULAR: {
-    path: '/popular',
-    name: 'Popular',
-    authorized: false,
+    PATH: '/popular',
+    NAME: 'Popular',
+    AUTHORIZED: true,
+  },
+
+  FAVORITES: {
+    PATH: '/favorites',
+    NAME: 'Favorites',
+    AUTHORIZED: true,
+  },
+
+  FILM_PAGE: {
+    PATH: '/[filmID]',
+    NAME: 'Film',
+    AUTHORIZED: true,
+  },
+
+  SIGN_IN: {
+    PATH: '/sign-in',
+    NAME: 'Sign In',
+    AUTHORIZED: false,
   },
 };

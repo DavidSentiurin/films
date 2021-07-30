@@ -1,13 +1,16 @@
 import React from 'react';
 import { Header, ISearchInputProps } from './Header';
 import styles from '../../../styles/components/Layout/Layout.module.scss';
+import { NavBar, NavLinks } from './NavBar';
 
 interface ILayoutProps {
   searchInputProps: ISearchInputProps;
+  navLinks: NavLinks;
 }
 
 export const Layout: React.FC<ILayoutProps> = ({
   searchInputProps,
+  navLinks,
   children,
 }) => {
   return (
@@ -16,7 +19,11 @@ export const Layout: React.FC<ILayoutProps> = ({
         <Header searchInputProps={searchInputProps} />
       </div>
 
-      <div style={{ overflowY: 'auto' }}>
+      <div className={styles['layout-content-wrapper']}>
+        <div className={styles['layout-navbar']}>
+          <NavBar navLinks={navLinks} />
+        </div>
+
         <main className={styles['layout-content']}>{children}</main>
       </div>
     </div>

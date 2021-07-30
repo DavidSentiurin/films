@@ -5,6 +5,8 @@ import Router from 'next/router';
 import NProgress from 'nprogress';
 import { SearchOutlined } from '@ant-design/icons';
 import { Layout } from '../components';
+import { NavLinks } from '../components/Layout/NavBar';
+import { ROUTES } from '../../constants';
 
 // progress bar on all pages
 Router.events.on('routeChangeStart', () => NProgress.start());
@@ -16,7 +18,7 @@ interface ILayoutContainer {}
 export const LayoutContainer: React.FC<ILayoutContainer> = ({ children }) => {
   /**
    * Getting rid of the bug on phones with bangs when using height: 100vh;
-   * BUG - 100vh is not 100% on display height and we have a vertical scroll.
+   * BUG - 100vh is not 100% on display height.
    */
   useEffect(() => {
     // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
@@ -40,6 +42,21 @@ export const LayoutContainer: React.FC<ILayoutContainer> = ({ children }) => {
     console.log(target.value);
   };
 
+  const navLinks: NavLinks = [
+    {
+      path: ROUTES.NOW_WATCHING.PATH,
+      label: ROUTES.NOW_WATCHING.NAME,
+    },
+    {
+      path: ROUTES.POPULAR.PATH,
+      label: ROUTES.POPULAR.NAME,
+    },
+    {
+      path: ROUTES.FAVORITES.PATH,
+      label: ROUTES.FAVORITES.NAME,
+    },
+  ];
+
   return (
     <Layout
       searchInputProps={{
@@ -48,6 +65,7 @@ export const LayoutContainer: React.FC<ILayoutContainer> = ({ children }) => {
         allowClear: true,
         suffix: <SearchOutlined />,
       }}
+      navLinks={navLinks}
     >
       {children}
     </Layout>

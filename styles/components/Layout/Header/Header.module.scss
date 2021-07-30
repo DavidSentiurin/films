@@ -1,10 +1,9 @@
-@use '../../../mixins' as mixins;
 @use '../../../varibles' as *;
 
 .header {
   display: grid;
-  grid-template-columns: min-content auto minmax(250px, 350px);
-  column-gap: 5%;
+  grid-template-columns: min-content auto;
+  justify-content: space-between;
   width: 100%;
   padding: 15px;
   box-shadow: $box-shadow;
@@ -22,37 +21,7 @@
     }
   }
 
-  &-menu {
-    display: flex;
-    align-items: center;
-    @include mixins.text-body;
-
-    &-link {
-      margin: 0 10px;
-
-      &:first-child {
-        margin-left: 0;
-      }
-
-      &:last-child {
-        margin-right: 0;
-      }
-
-      a {
-        border-bottom-color: $color-white;
-        border-bottom-style: solid;
-        border-bottom-width: 1px;
-        padding-bottom: 2px;
-        transition: border-bottom-color 0.3s ease;
-
-        &:hover {
-          border-bottom-color: $color-accent;
-        }
-      }
-    }
-  }
-
   &-search {
-    align-self: flex-end;
+    justify-self: center;
   }
 }
