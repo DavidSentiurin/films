@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { Typography } from 'antd';
-import { ROUTES } from '../common/constants';
+import { ROUTES } from '../src/common/constants';
 
 const { Title } = Typography;
 

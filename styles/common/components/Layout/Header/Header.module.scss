@@ -1,0 +1,36 @@
+@use '../../../../varibles' as *;
+
+.header {
+  display: grid;
+  grid-template-columns: min-content auto;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 15px;
+  box-shadow: $box-shadow;
+  min-height: $header-height;
+  height: $header-height;
+  max-height: $header-height;
+
+  &.authorized {
+    display: grid;
+    grid-template-columns: min-content auto min-content;
+  }
+
+  &-logotype {
+    font-weight: 700;
+    font-size: 24px;
+    margin-right: 5%;
+    user-select: none;
+
+    a {
+      span {
+        color: $color-accent;
+      }
+    }
+  }
+
+  &-search {
+    justify-self: center;
+  }
+}
