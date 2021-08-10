@@ -17,9 +17,12 @@ export const signInAction = (formData: ISingInAction) => ({
 export const getRequestTokenAction = () => ({
   type: REQUEST_THE_REQUEST_TOKEN,
 });
-export const setSessionId = (sessionId: string) => ({
+export const setSession = (sessionId: string, expireAt: string) => ({
   type: SET_SESSION_ID,
-  payload: sessionId,
+  payload: {
+    sessionId,
+    expireAt,
+  },
 });
 export const singOutAction = (sessionId: string) => ({
   type: REQUEST_DELETE_SESSION,

@@ -1,12 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import cookie from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
 import {
   ISingInAction,
   signInAction,
   getRequestTokenAction,
   receiveSessionId,
-  setSessionId,
+  setSession,
   singOutAction,
 } from '../duck';
 import { useRouter } from 'next/router';
@@ -39,17 +40,19 @@ const SessionContext = React.createContext<ISession>(initialState);
 
 export const SessionProvider: React.FC = ({ children }) => {
   const dispatch = useDispatch();
-  const sessionId = useSelector(receiveSessionId);
+  const session = useSelector(receiveSessionId);
   // null means isAuthorized is not yet defined
   const [isAuthorized, setIsAuthorized] = useState<IsAuthorized>(null);
 
   // get sessionId with cookie store when
   useEffect(() => {
-    if (!sessionId) {
-      const sessionIdWithCookie = cookie.get(COOKIE_KEYS.SESSION_ID);
+    if (!session.id) {
+      const sessionDataWithCookie = cookie.get(COOKIE_KEYS.SESSION_ID);
 
-      if (sessionIdWithCookie) {
-        dispatch(setSessionId(sessionIdWithCookie));
+      if (sessionDataWithCookie) {
+        const { sessionId, expireAt } = JSON.parse(sessionDataWithCookie);
+
+        dispatch(setSession(sessionId, expireAt));
 
         setIsAuthorized(true);
         return;
@@ -61,29 +64,38 @@ export const SessionProvider: React.FC = ({ children }) => {
 
   // when we are logged in, we set the sessionId in the cookie
   useEffect(() => {
-    if (sessionId && dispatch) {
-      cookie.set(COOKIE_KEYS.SESSION_ID, sessionId);
+    if (session.id && dispatch) {
+      const sessionData = JSON.stringify({
+        sessionId: session.id,
+        expireAt: moment()
+          .add(process.env.NEXT_PUBLIC_EXPIRED_SESSION_ID_MINUTES, 'minutes')
+          .utc()
+          .format(process.env.NEXT_PUBLIC_DATE_FORMAT),
+      });
+
+      cookie.set(COOKIE_KEYS.SESSION_ID, sessionData);
 
       setIsAuthorized(true);
     }
-  }, [sessionId, dispatch]);
+  }, [session.id, dispatch]);
 
   useGuard(isAuthorized);
+  useSessionObserver(session.id, session.expireAt, signOut);
 
-  const getRequestToken = () => {
+  function getRequestToken() {
     dispatch(getRequestTokenAction());
-  };
+  }
 
-  const signIn: SignIn = (formData) => {
+  function signIn(formData: ISingInAction) {
     dispatch(signInAction(formData));
-  };
+  }
 
-  const signOut: SignOut = () => {
-    dispatch(singOutAction(sessionId));
+  function signOut() {
+    dispatch(singOutAction(session.id));
 
     cookie.remove(COOKIE_KEYS.SESSION_ID);
     setIsAuthorized(false);
-  };
+  }
 
   return (
     <SessionContext.Provider
@@ -117,6 +129,32 @@ function useGuard(isAuthorized: IsAuthorized) {
       }
     }
   }, [isAuthorized, router.pathname]);
+}
+
+function useSessionObserver(
+  sessionId: string,
+  expireAt: string,
+  signOut: SignOut,
+) {
+  const removeId = useRef<NodeJS.Timer | null>(null);
+  useEffect(() => {
+    if (sessionId && expireAt) {
+      removeId.current = setInterval(() => {
+        const nowUnix = moment().unix();
+        const expireAtUnix = moment(expireAt).unix();
+
+        if (nowUnix >= expireAtUnix) {
+          signOut();
+        }
+      }, 1000);
+    }
+
+    return () => {
+      if (removeId.current) {
+        clearInterval(removeId.current);
+      }
+    };
+  }, [sessionId, expireAt]);
 }
 
 export const useSession = () => {

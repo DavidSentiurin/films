@@ -17,9 +17,9 @@ export const SignInContainer: React.FC = () => {
   const { signIn, getRequestToken, isAuthorized } = useSession();
 
   useEffect(() => {
-    if (!session.sessionId.loading) {
+    if (!session.session.loading) {
       showAlert({
-        content: session.sessionId.error,
+        content: session.session.error,
         duration: 3,
         type: 'error',
       });
@@ -34,8 +34,8 @@ export const SignInContainer: React.FC = () => {
     }
   }, [
     showAlert,
-    session.sessionId.error,
-    session.sessionId.loading,
+    session.session.error,
+    session.session.loading,
     session.requestToken.error,
     session.requestToken.loading,
   ]);
@@ -63,8 +63,8 @@ export const SignInContainer: React.FC = () => {
   return (
     <>
       <SignInComponent
-        disableForm={!!session.sessionId.loading}
-        loadingFormBtn={!!session.sessionId.loading}
+        disableForm={!!session.session.loading}
+        loadingFormBtn={!!session.session.loading}
         onFinish={onFinish}
         done={isAuthorized}
         error={!!session.requestToken.error}

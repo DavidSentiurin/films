@@ -5,7 +5,7 @@ export type { ISingInAction } from './actions';
 export {
   getRequestTokenAction,
   signInAction,
-  setSessionId,
+  setSession,
   singOutAction,
 } from './actions';
 

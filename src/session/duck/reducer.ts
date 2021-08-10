@@ -1,4 +1,5 @@
 import { AnyAction } from 'redux';
+import moment from 'moment';
 import {
   GET_REQUEST_TOKEN,
   LOAD_FAILD_REQUEST_TOKEN,
@@ -12,11 +13,15 @@ import {
   LOAD_DELETE_SESSION,
   LOAD_SUCCESS_DELETE_SESSION,
   LOAD_FAILD_DELETE_SESSION,
+  SET_SESSION_ID,
 } from './actionTypes';
 
 export interface ISessionState {
-  sessionId: {
-    data: string;
+  session: {
+    data: {
+      id: string;
+      expireAt: string;
+    };
     // loading: null is initial loading.
     loading: boolean | null;
     error: string | boolean;
@@ -40,8 +45,11 @@ const requestTokenInital = {
   error: false,
 };
 
-const sessionIdInitial = {
-  data: '',
+const sessionInitial = {
+  data: {
+    id: '',
+    expireAt: '',
+  },
   loading: null,
   error: false,
 };
@@ -54,7 +62,7 @@ const deleteSessionInitial = {
 
 const initialState = {
   requestToken: requestTokenInital,
-  sessionId: sessionIdInitial,
+  session: sessionInitial,
   deleteSession: deleteSessionInitial,
 };
 
@@ -109,9 +117,18 @@ export function reducer(
 
       return {
         ...state,
-        sessionId: {
-          ...state.sessionId,
-          data: sessionId,
+        session: {
+          ...state.session,
+          data: {
+            id: sessionId,
+            expireAt: moment()
+              .add(
+                process.env.NEXT_PUBLIC_EXPIRED_SESSION_ID_MINUTES,
+                'minutes',
+              )
+              .utc()
+              .format(process.env.NEXT_PUBLIC_DATE_FORMAT),
+          },
         },
 
         // reset state of deleteSession
@@ -121,8 +138,8 @@ export function reducer(
     case LOAD_SESSION_ID: {
       return {
         ...state,
-        sessionId: {
-          ...state.sessionId,
+        session: {
+          ...state.session,
           loading: true,
         },
       };
@@ -130,8 +147,8 @@ export function reducer(
     case LOAD_SUCCESS_SESSION_ID: {
       return {
         ...state,
-        sessionId: {
-          ...state.sessionId,
+        session: {
+          ...state.session,
           loading: false,
           error: false,
         },
@@ -140,10 +157,24 @@ export function reducer(
     case LOAD_FAILD_SESSION_ID: {
       return {
         ...state,
-        sessionId: {
-          ...state.sessionId,
+        session: {
+          ...state.session,
           loading: false,
           error: action.payload.message,
+        },
+      };
+    }
+    case SET_SESSION_ID: {
+      const { sessionId, expireAt } = action.payload;
+
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          data: {
+            id: sessionId,
+            expireAt,
+          },
         },
       };
     }
@@ -155,8 +186,8 @@ export function reducer(
           ...state.deleteSession,
           data: action.payload,
         },
-        // reset sessionId state
-        sessionId: sessionIdInitial,
+        // reset session state
+        session: sessionInitial,
         // reset requestToken state
         requestToken: requestTokenInital,
       };
