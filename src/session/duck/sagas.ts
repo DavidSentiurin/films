@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { AnyAction } from 'redux';
 import { call, put, select, takeLatest } from 'redux-saga/effects';
+import { ERRORS } from 'src/common/constants';
 import {
   requestSessionId,
   requestTheRequestToken,
@@ -25,8 +26,6 @@ import {
 } from './actionTypes';
 import { receiveRequestToken } from './index';
 
-const GENERAL_ERROR_MESSAGE = 'Something went wrong. Please try again later.';
-
 export function* watcher() {
   yield takeLatest(REQUEST_THE_REQUEST_TOKEN, getRequestTokenWorker);
   yield takeLatest(REQUEST_SESSION_ID, signInWorker);
@@ -47,7 +46,7 @@ function* getRequestTokenWorker() {
   yield put({
     type: LOAD_FAILD_REQUEST_TOKEN,
     payload: {
-      message: GENERAL_ERROR_MESSAGE,
+      message: ERRORS.GENERAL,
     },
   });
 }
@@ -72,7 +71,7 @@ function* signInWorker(action: AnyAction) {
       yield put({
         type: LOAD_FAILD_SESSION_ID,
         payload: {
-          message: response.data.statusMessage || GENERAL_ERROR_MESSAGE,
+          message: response.data.statusMessage || ERRORS.GENERAL,
         },
       });
 
@@ -83,7 +82,7 @@ function* signInWorker(action: AnyAction) {
   yield put({
     type: LOAD_FAILD_SESSION_ID,
     payload: {
-      message: GENERAL_ERROR_MESSAGE,
+      message: ERRORS.GENERAL,
     },
   });
 }
@@ -102,7 +101,7 @@ function* signOutWorker(action: AnyAction) {
   yield put({
     type: LOAD_FAILD_DELETE_SESSION,
     payload: {
-      message: GENERAL_ERROR_MESSAGE,
+      message: ERRORS.GENERAL,
     },
   });
 }

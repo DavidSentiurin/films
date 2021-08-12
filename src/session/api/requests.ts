@@ -2,16 +2,16 @@ import { AxiosResponse } from 'axios';
 import { isEmpty } from 'lodash';
 import { Api } from 'src/common/api';
 import {
+  normalizeResponse,
+  normalizeResponseError,
+} from 'src/common/api/utils';
+import {
   CREATE_SESSION,
   REQUEST_TOKEN,
   SESSION_WITH_LOGIN,
   DELETE_SESSION,
 } from './index';
-import {
-  normalizeResponse,
-  normalizeResponseError,
-  normalizeSessionIdRequest,
-} from './index';
+import { normalizeSessionIdRequest } from './index';
 
 export function requestTheRequestToken() {
   return Api.get(REQUEST_TOKEN)

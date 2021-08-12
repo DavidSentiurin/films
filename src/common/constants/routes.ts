@@ -5,21 +5,29 @@ export interface IRoute {
     ACCESS: boolean;
     REDIRECT?: string;
   };
+  PARAMS_LIST?: string[];
+  PARAMS?: string;
 }
 
 class Routes {
-  readonly NOW_WATCHING: IRoute;
+  readonly NOW_PLAYING: IRoute;
   readonly POPULAR: IRoute;
   readonly FAVORITES: IRoute;
   readonly FILM_PAGE: IRoute;
   readonly SIGN_IN: IRoute;
 
   constructor() {
-    this.NOW_WATCHING = {
-      PATH: '/now-watching',
-      NAME: 'Now watching',
+    this.NOW_PLAYING = {
+      PATH: '/now-playing',
+      NAME: 'Now playing',
       AUTHORIZED: {
         ACCESS: true,
+      },
+      PARAMS_LIST: ['page=1'],
+      get PARAMS() {
+        return this.PARAMS_LIST?.length
+          ? this.PARAMS_LIST.map((p) => p).join('&')
+          : '';
       },
     };
 
@@ -52,7 +60,7 @@ class Routes {
       NAME: 'Sign In',
       AUTHORIZED: {
         ACCESS: false,
-        REDIRECT: this.NOW_WATCHING.PATH,
+        REDIRECT: this.NOW_PLAYING.PATH,
       },
     };
   }

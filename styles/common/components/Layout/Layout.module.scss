@@ -17,7 +17,7 @@
 
     &-authorized {
       display: grid;
-      grid-template-columns: minmax(150px, 200px) auto;
+      grid-template-columns: 150px auto;
       overflow-y: auto;
     }
   }

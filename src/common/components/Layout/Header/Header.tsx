@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ROUTES } from '../../../constants';
 import { SearchInput } from './index';
 import { ISearchInputProps } from './SearchInput';
-import { IsAuthorized, SignOut } from 'src/session';
+import { IsAuthorized, SignOut } from 'src/session/provider';
 import { Button } from 'antd';
 
 interface IHeaderProps {
@@ -39,7 +39,7 @@ const AuthorizedHeader: React.FC<IAuthorizedHeaderProps> = ({
   return (
     <header className={`${styles['header']} ${styles['authorized']}`}>
       <div className={styles['header-logotype']}>
-        <Link href={ROUTES.NOW_WATCHING.PATH}>
+        <Link href={ROUTES.NOW_PLAYING.PATH}>
           <a>
             <span>FILMS</span>.
           </a>
@@ -63,7 +63,7 @@ const UnauthorizedHeader = () => {
   return (
     <header className={styles['header']}>
       <div className={styles['header-logotype']}>
-        <Link href={ROUTES.NOW_WATCHING.PATH}>
+        <Link href={ROUTES.NOW_PLAYING.PATH}>
           <a>
             <span>FILMS</span>.
           </a>

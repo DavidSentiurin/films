@@ -13,8 +13,4 @@ export {
 
 export type { IUserData } from './requests';
 
-export {
-  normalizeResponse,
-  normalizeResponseError,
-  normalizeSessionIdRequest,
-} from './normalize';
+export { normalizeSessionIdRequest } from './normalize';

@@ -1,4 +1,4 @@
-import { camelCase } from 'lodash';
+import { camelCase, isNumber } from 'lodash';
 
 type Data = { [key: string]: any } | any[];
 
@@ -16,4 +16,10 @@ export const camelizeKeys = (data: Data): Data => {
   }
 
   return data;
+};
+
+export const getImageRatio = (widthOrHeight: number, ratio: number) => {
+  if (isNumber(widthOrHeight) && isNumber(ratio)) {
+    return ratio * widthOrHeight;
+  }
 };

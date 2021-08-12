@@ -114,7 +114,7 @@ export const SessionProvider: React.FC = ({ children }) => {
 function useGuard(isAuthorized: IsAuthorized) {
   const router = useRouter();
   const defaultRedirect = isAuthorized
-    ? ROUTES.NOW_WATCHING.PATH
+    ? ROUTES.NOW_PLAYING.PATH
     : ROUTES.SIGN_IN.PATH;
 
   useEffect(() => {
@@ -123,7 +123,10 @@ function useGuard(isAuthorized: IsAuthorized) {
         (route) => route.PATH === router.pathname,
       );
 
-      if (currentRoute?.AUTHORIZED.ACCESS !== isAuthorized) {
+      if (
+        currentRoute?.AUTHORIZED.ACCESS !== undefined &&
+        currentRoute.AUTHORIZED.ACCESS !== isAuthorized
+      ) {
         const redirect = currentRoute.AUTHORIZED.REDIRECT || defaultRedirect;
         router.replace(redirect);
       }

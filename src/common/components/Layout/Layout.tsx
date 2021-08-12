@@ -2,7 +2,7 @@ import React from 'react';
 import { Header, ISearchInputProps } from './Header';
 import styles from '@/styles/common/components/Layout/Layout.module.scss';
 import { NavBar, NavLinks } from './NavBar';
-import { IsAuthorized, SignOut } from 'src/session';
+import { IsAuthorized, SignOut } from 'src/session/provider';
 
 interface ILayoutProps {
   searchInputProps: ISearchInputProps;
@@ -43,7 +43,9 @@ export const Layout: React.FC<ILayoutProps> = ({
           </div>
         )}
 
-        <main className={styles['layout-content']}>{children}</main>
+        <main id="main" className={styles['layout-content']}>
+          {children}
+        </main>
       </div>
     </div>
   );

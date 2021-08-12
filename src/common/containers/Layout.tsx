@@ -7,7 +7,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Layout } from '../components';
 import { NavLinks } from '../components/Layout/NavBar';
 import { ROUTES } from '../constants';
-import { useSession } from 'src/session';
+import { useSession } from 'src/session/provider';
 
 // progress bar on all pages
 Router.events.on('routeChangeStart', () => NProgress.start());
@@ -44,8 +44,8 @@ export const LayoutContainer: React.FC = ({ children }) => {
 
   const navLinks: NavLinks = [
     {
-      path: ROUTES.NOW_WATCHING.PATH,
-      label: ROUTES.NOW_WATCHING.NAME,
+      path: `${ROUTES.NOW_PLAYING.PATH}?${ROUTES.NOW_PLAYING.PARAMS}`,
+      label: ROUTES.NOW_PLAYING.NAME,
     },
     {
       path: ROUTES.POPULAR.PATH,

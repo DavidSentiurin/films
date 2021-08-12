@@ -7,7 +7,7 @@ import {
 import { useAlert } from '../../common/hooks';
 import { RootState } from '../../store';
 import { REGEX } from '../../common/constants';
-import { useSession } from '../index';
+import { useSession } from '../provider';
 
 export type OnFinish = (values: { username: string; password: string }) => any;
 
@@ -44,7 +44,7 @@ export const SignInContainer: React.FC = () => {
     if (session.requestToken.loading === null) {
       getRequestToken();
     }
-  }, [session.requestToken.loading, getRequestToken]);
+  }, [session.requestToken.loading]);
 
   const onFinish: OnFinish = (values) => {
     if (
