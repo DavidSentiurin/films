@@ -14,3 +14,5 @@ export {
 export type { IUserData } from './requests';
 
 export { normalizeSessionIdRequest } from './normalize';
+
+export type { IRequestTokenRes, ISessionIdRes } from './dto';

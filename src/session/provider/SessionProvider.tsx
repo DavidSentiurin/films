@@ -3,12 +3,12 @@ import cookie from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import {
-  ISingInAction,
-  signInAction,
-  getRequestTokenAction,
+  ISessionIdFormData,
+  requestSessionId,
+  requestTheRequestToken,
   receiveSessionId,
-  setSession,
-  singOutAction,
+  setSessionIdData,
+  requestDeleteSession,
 } from '../duck';
 import { useRouter } from 'next/router';
 import { IRoute, ROUTES } from 'src/common/constants';
@@ -25,7 +25,7 @@ interface ISession {
 }
 
 export type IsAuthorized = boolean | null;
-export type SignIn = (formData: ISingInAction) => void;
+export type SignIn = (formData: ISessionIdFormData) => void;
 export type SignOut = () => void;
 export type GetRequestToken = () => void;
 
@@ -52,7 +52,7 @@ export const SessionProvider: React.FC = ({ children }) => {
       if (sessionDataWithCookie) {
         const { sessionId, expireAt } = JSON.parse(sessionDataWithCookie);
 
-        dispatch(setSession(sessionId, expireAt));
+        dispatch(setSessionIdData(sessionId, expireAt));
 
         setIsAuthorized(true);
         return;
@@ -83,15 +83,15 @@ export const SessionProvider: React.FC = ({ children }) => {
   useSessionObserver(session.id, session.expireAt, signOut);
 
   function getRequestToken() {
-    dispatch(getRequestTokenAction());
+    dispatch(requestTheRequestToken());
   }
 
-  function signIn(formData: ISingInAction) {
-    dispatch(signInAction(formData));
+  function signIn(formData: ISessionIdFormData) {
+    dispatch(requestSessionId(formData));
   }
 
   function signOut() {
-    dispatch(singOutAction(session.id));
+    dispatch(requestDeleteSession(session.id));
 
     cookie.remove(COOKIE_KEYS.SESSION_ID);
     setIsAuthorized(false);

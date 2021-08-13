@@ -1,20 +1,17 @@
-import { AnyAction } from 'redux';
 import moment from 'moment';
+import { TYPE_KEYS } from './actionTypes';
 import {
-  GET_REQUEST_TOKEN,
-  LOAD_FAILD_REQUEST_TOKEN,
-  LOAD_FAILD_SESSION_ID,
-  LOAD_REQUEST_TOKEN,
-  LOAD_SESSION_ID,
-  LOAD_SUCCESS_REQUEST_TOKEN,
-  LOAD_SUCCESS_SESSION_ID,
-  GET_SESSION_ID,
-  DELETE_SESSION,
-  LOAD_DELETE_SESSION,
-  LOAD_SUCCESS_DELETE_SESSION,
-  LOAD_FAILD_DELETE_SESSION,
-  SET_SESSION_ID,
-} from './actionTypes';
+  IFailureFetchDeleteSessionAction,
+  IFailureFetchRequestTokenAction,
+  IFailureFetchSessionIdAction,
+  IRequestDeleteSessionAction,
+  IRequestSessionIdAction,
+  IRequestTheRequestTokenAction,
+  ISetSessionIdDataAction,
+  ISuccessFetchDeleteSessionAction,
+  ISuccessFetchRequestTokenAction,
+  ISuccessFetchSessionIdAction,
+} from './actions';
 
 export interface ISessionState {
   session: {
@@ -66,12 +63,34 @@ const initialState = {
   deleteSession: deleteSessionInitial,
 };
 
-export function reducer(
+type ActionsTypes =
+  | IRequestTheRequestTokenAction
+  | ISuccessFetchRequestTokenAction
+  | IFailureFetchRequestTokenAction
+  | IRequestSessionIdAction
+  | ISuccessFetchSessionIdAction
+  | IFailureFetchSessionIdAction
+  | ISetSessionIdDataAction
+  | IRequestDeleteSessionAction
+  | ISuccessFetchDeleteSessionAction
+  | IFailureFetchDeleteSessionAction;
+
+export const reducer = (
   state: ISessionState = initialState,
-  action: AnyAction,
-) {
+  action: ActionsTypes,
+): ISessionState => {
   switch (action.type) {
-    case GET_REQUEST_TOKEN: {
+    case TYPE_KEYS.REQUEST_TOKEN_REQUEST: {
+      return {
+        ...state,
+        requestToken: {
+          ...state.requestToken,
+          loading: true,
+          error: false,
+        },
+      };
+    }
+    case TYPE_KEYS.REQUEST_TOKEN_SUCCESS: {
       const { requestToken } = action.payload;
 
       return {
@@ -79,29 +98,11 @@ export function reducer(
         requestToken: {
           ...state.requestToken,
           data: requestToken,
-        },
-      };
-    }
-    case LOAD_REQUEST_TOKEN: {
-      return {
-        ...state,
-        requestToken: {
-          ...state.requestToken,
-          loading: true,
-        },
-      };
-    }
-    case LOAD_SUCCESS_REQUEST_TOKEN: {
-      return {
-        ...state,
-        requestToken: {
-          ...state.requestToken,
           loading: false,
-          error: false,
         },
       };
     }
-    case LOAD_FAILD_REQUEST_TOKEN: {
+    case TYPE_KEYS.REQUEST_TOKEN_FAILURE: {
       return {
         ...state,
         requestToken: {
@@ -112,8 +113,18 @@ export function reducer(
       };
     }
 
-    case GET_SESSION_ID: {
-      const { sessionId } = action.payload.data;
+    case TYPE_KEYS.SESSION_ID_REQUEST: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          loading: true,
+          error: false,
+        },
+      };
+    }
+    case TYPE_KEYS.SESSION_ID_SUCCESS: {
+      const { sessionId } = action.payload;
 
       return {
         ...state,
@@ -129,32 +140,14 @@ export function reducer(
               .utc()
               .format(process.env.NEXT_PUBLIC_DATE_FORMAT),
           },
+          loading: false,
         },
 
         // reset state of deleteSession
         deleteSession: deleteSessionInitial,
       };
     }
-    case LOAD_SESSION_ID: {
-      return {
-        ...state,
-        session: {
-          ...state.session,
-          loading: true,
-        },
-      };
-    }
-    case LOAD_SUCCESS_SESSION_ID: {
-      return {
-        ...state,
-        session: {
-          ...state.session,
-          loading: false,
-          error: false,
-        },
-      };
-    }
-    case LOAD_FAILD_SESSION_ID: {
+    case TYPE_KEYS.SESSION_ID_FAILURE: {
       return {
         ...state,
         session: {
@@ -164,7 +157,7 @@ export function reducer(
         },
       };
     }
-    case SET_SESSION_ID: {
+    case TYPE_KEYS.SET_SESSION_ID: {
       const { sessionId, expireAt } = action.payload;
 
       return {
@@ -179,12 +172,23 @@ export function reducer(
       };
     }
 
-    case DELETE_SESSION: {
+    case TYPE_KEYS.DELETE_SESSION_REQUEST: {
+      return {
+        ...state,
+        deleteSession: {
+          ...state.deleteSession,
+          loading: true,
+          error: false,
+        },
+      };
+    }
+    case TYPE_KEYS.DELETE_SESSION_SUCCESS: {
       return {
         ...state,
         deleteSession: {
           ...state.deleteSession,
           data: action.payload,
+          loading: false,
         },
         // reset session state
         session: sessionInitial,
@@ -192,26 +196,7 @@ export function reducer(
         requestToken: requestTokenInital,
       };
     }
-    case LOAD_DELETE_SESSION: {
-      return {
-        ...state,
-        deleteSession: {
-          ...state.deleteSession,
-          loading: true,
-        },
-      };
-    }
-    case LOAD_SUCCESS_DELETE_SESSION: {
-      return {
-        ...state,
-        deleteSession: {
-          ...state.deleteSession,
-          loading: false,
-          error: false,
-        },
-      };
-    }
-    case LOAD_FAILD_DELETE_SESSION: {
+    case TYPE_KEYS.DELETE_SESSION_FAILURE: {
       return {
         ...state,
         deleteSession: {
@@ -225,4 +210,4 @@ export function reducer(
     default:
       return state;
   }
-}
+};
