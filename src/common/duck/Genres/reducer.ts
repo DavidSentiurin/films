@@ -1,16 +1,17 @@
-import { AnyAction } from 'redux';
 import { IGenre } from 'src/common/api/dto';
 import {
-  GET_GENRES,
-  LOAD_FAILD_GENRES,
-  LOAD_SUCCESS_GENRES,
-} from './actionTypes';
+  IFailureFetchGenresAction,
+  IFetchGenresAction,
+  ISuccessFetchGenresAction,
+} from './actions';
+import { TYPE_KEYS } from './actionTypes';
 
+export type IGenresData = {
+  flat: IGenre[];
+  map: GenresMap;
+};
 export interface IGenresState {
-  data: {
-    flat: IGenre[];
-    map: GenresMap;
-  };
+  data: IGenresData;
   loading: boolean | null;
   error: boolean | string;
 }
@@ -28,28 +29,34 @@ const initalState = {
   error: false,
 };
 
+type ActionTypes =
+  | IFetchGenresAction
+  | ISuccessFetchGenresAction
+  | IFailureFetchGenresAction;
+
 export const reducer = (
   state: IGenresState = initalState,
-  action: AnyAction,
+  action: ActionTypes,
 ) => {
   switch (action.type) {
-    case GET_GENRES: {
+    case TYPE_KEYS.GENRES_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+        error: false,
+      };
+    }
+    case TYPE_KEYS.GENRES_SUCCESS: {
       return {
         ...state,
         data: {
           flat: action.payload.flat,
           map: action.payload.map,
         },
-      };
-    }
-    case LOAD_SUCCESS_GENRES: {
-      return {
-        ...state,
         loading: false,
-        error: false,
       };
     }
-    case LOAD_FAILD_GENRES: {
+    case TYPE_KEYS.GENRES_FAILURE: {
       return {
         ...state,
         loading: false,

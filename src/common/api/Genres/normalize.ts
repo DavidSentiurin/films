@@ -1,9 +1,13 @@
 import { AxiosResponse } from 'axios';
 import { GenresMap } from 'src/common/duck/Genres';
+import { IGenresData } from 'src/common/duck/Genres/reducer';
 import { IGenre } from '../dto';
+import { IGenresRes } from '../dto/genre';
 import { normalizeResponse } from '../utils';
 
-export function normalizeResponseGeners(data: AxiosResponse) {
+export const normalizeResponseGeners = (
+  data: AxiosResponse<IGenresRes>,
+): AxiosResponse<IGenresData> => {
   const normilizedData = normalizeResponse(data);
 
   normilizedData.data = {
@@ -16,4 +20,4 @@ export function normalizeResponseGeners(data: AxiosResponse) {
   };
 
   return normilizedData;
-}
+};

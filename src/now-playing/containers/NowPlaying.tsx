@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ROUTES } from 'src/common/constants';
-import { fetchGenresAction, receiveGenres } from 'src/common/duck/Genres';
+import { fetchGenres, receiveGenres } from 'src/common/duck/Genres';
 import { useAlert } from 'src/common/hooks';
 import { NowPlaying } from '../components';
 import { requestNowPlaying, receiveNowPlaying } from '../duck';
@@ -35,7 +35,7 @@ export const NowPlayingContainer: React.FC<INowPlayingContainerProps> = ({
   // fetch genres if them there not
   useEffect(() => {
     if (genresStore.loading === null) {
-      dispatch(fetchGenresAction());
+      dispatch(fetchGenres());
     }
   }, [genresStore.loading]);
 
