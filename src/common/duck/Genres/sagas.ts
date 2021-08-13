@@ -2,39 +2,25 @@ import { AxiosResponse } from 'axios';
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { fetchGenres } from 'src/common/api/Genres';
 import { ERRORS } from 'src/common/constants';
-import {
-  GET_GENRES,
-  LOAD_FAILD_GENRES,
-  LOAD_GENRES,
-  LOAD_SUCCESS_GENRES,
-  REQUEST_GENRES,
-} from './actionTypes';
+import { failureFetchGenres, successFetchGenres } from './actions';
+import { TYPE_KEYS } from './actionTypes';
+import { IGenresData } from './reducer';
 
 export function* watcher() {
-  yield takeLatest(REQUEST_GENRES, getGenres);
+  yield takeLatest(TYPE_KEYS.GENRES_REQUEST, getGenres);
 }
 
 function* getGenres() {
-  yield put({ type: LOAD_GENRES });
-  const { status, data }: AxiosResponse = yield call(fetchGenres);
+  try {
+    const { data }: AxiosResponse<IGenresData> = yield call(fetchGenres);
 
-  if (status === 200) {
-    yield put({
-      type: GET_GENRES,
-      payload: {
-        flat: data.flat,
-        map: data.map,
-      },
-    });
-    yield put({ type: LOAD_SUCCESS_GENRES });
+    if (data.flat.length > 0) {
+      yield put(successFetchGenres(data));
+      return;
+    }
 
-    return;
+    yield put(failureFetchGenres(ERRORS.GENERAL));
+  } catch (exceptions) {
+    yield put(failureFetchGenres(ERRORS.GENERAL));
   }
-
-  yield put({
-    type: LOAD_FAILD_GENRES,
-    payload: {
-      message: ERRORS.GENERAL,
-    },
-  });
 }

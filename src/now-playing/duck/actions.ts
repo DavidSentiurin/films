@@ -1,21 +1,39 @@
 import { INowPlaying } from '../api';
-import {
-  NOW_PLAYING_FAILURE,
-  NOW_PLAYING_REQUEST,
-  NOW_PLAYING_SUCCESS,
-} from './actionTypes';
+import { TYPE_KEYS } from './actionTypes';
 
-export const requestNowPlaying = (page: number | string) => ({
-  type: NOW_PLAYING_REQUEST,
+type Page = number | string;
+export interface IRequestNowPlayingAction {
+  type: TYPE_KEYS.NOW_PLAYING_REQUEST;
+  payload: Page;
+}
+
+export interface ISuccessFetchNowPlayingAction {
+  type: TYPE_KEYS.NOW_PLAYING_SUCCESS;
+  payload: INowPlaying;
+}
+
+export interface IfailureFetchNowPlayingAction {
+  type: TYPE_KEYS.NOW_PLAYING_FAILURE;
+  payload: {
+    message: string;
+  };
+}
+
+export const requestNowPlaying = (page: Page): IRequestNowPlayingAction => ({
+  type: TYPE_KEYS.NOW_PLAYING_REQUEST,
   payload: page,
 });
 
-export const successFetchNowPlaying = (data: INowPlaying) => ({
-  type: NOW_PLAYING_SUCCESS,
+export const successFetchNowPlaying = (
+  data: INowPlaying,
+): ISuccessFetchNowPlayingAction => ({
+  type: TYPE_KEYS.NOW_PLAYING_SUCCESS,
   payload: data,
 });
 
-export const failureFetchNowPlaying = (message: string) => ({
-  type: NOW_PLAYING_FAILURE,
+export const failureFetchNowPlaying = (
+  message: string,
+): IfailureFetchNowPlayingAction => ({
+  type: TYPE_KEYS.NOW_PLAYING_FAILURE,
   payload: { message },
 });

@@ -1,5 +1,5 @@
-export const GET_GENRES = 'films/genders/GET_GENRES' as const;
-export const LOAD_GENRES = 'films/genders/LOAD_GENRES' as const;
-export const LOAD_SUCCESS_GENRES = 'films/genders/LOAD_SUCCESS_GENRES' as const;
-export const LOAD_FAILD_GENRES = 'films/genders/LOAD_FAILD_GENRES' as const;
-export const REQUEST_GENRES = 'films/genders/REQUEST_GENRES' as const;
+export enum TYPE_KEYS {
+  GENRES_REQUEST = 'films/genders/GENRES_REQUEST',
+  GENRES_SUCCESS = 'films/genders/GENRES_SUCCESS',
+  GENRES_FAILURE = 'films/genders/GENRES_FAILURE',
+}
