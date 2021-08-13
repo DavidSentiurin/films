@@ -1,12 +1,12 @@
 export { reducer } from './reducer';
 export { watcher } from './sagas';
 
-export type { ISingInAction } from './actions';
+export type { ISessionIdFormData } from './actions';
 export {
-  getRequestTokenAction,
-  signInAction,
-  setSession,
-  singOutAction,
+  requestTheRequestToken,
+  requestSessionId,
+  setSessionIdData,
+  requestDeleteSession,
 } from './actions';
 
 export { receiveRequestToken, receiveSessionId } from './selectors';
