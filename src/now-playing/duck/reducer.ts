@@ -1,10 +1,10 @@
-import { AnyAction } from 'redux';
 import { INowPlayingFilm } from '../api';
 import {
-  NOW_PLAYING_REQUEST,
-  NOW_PLAYING_SUCCESS,
-  NOW_PLAYING_FAILURE,
-} from './actionTypes';
+  IfailureFetchNowPlayingAction,
+  IRequestNowPlayingAction,
+  ISuccessFetchNowPlayingAction,
+} from './actions';
+import { TYPE_KEYS } from './actionTypes';
 
 export interface INowPlayingStore {
   data: {
@@ -30,12 +30,17 @@ const initialState = {
   error: false,
 };
 
+type ActionTypes =
+  | IRequestNowPlayingAction
+  | ISuccessFetchNowPlayingAction
+  | IfailureFetchNowPlayingAction;
+
 export const reducer = (
   state: INowPlayingStore = initialState,
-  action: AnyAction,
+  action: ActionTypes,
 ): INowPlayingStore => {
   switch (action.type) {
-    case NOW_PLAYING_REQUEST: {
+    case TYPE_KEYS.NOW_PLAYING_REQUEST: {
       return {
         ...state,
         loading: true,
@@ -43,7 +48,7 @@ export const reducer = (
       };
     }
 
-    case NOW_PLAYING_SUCCESS: {
+    case TYPE_KEYS.NOW_PLAYING_SUCCESS: {
       const { totalPages, totalResults, page, results } = action.payload;
 
       return {
@@ -60,7 +65,7 @@ export const reducer = (
       };
     }
 
-    case NOW_PLAYING_FAILURE: {
+    case TYPE_KEYS.NOW_PLAYING_FAILURE: {
       return {
         ...state,
         loading: false,
