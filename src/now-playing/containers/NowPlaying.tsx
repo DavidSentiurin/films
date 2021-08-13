@@ -6,11 +6,7 @@ import { ROUTES } from 'src/common/constants';
 import { fetchGenresAction, receiveGenres } from 'src/common/duck/Genres';
 import { useAlert } from 'src/common/hooks';
 import { NowPlaying } from '../components';
-import {
-  fetchNowPlayingAction,
-  INowPlayingMap,
-  receiveNowPlaying,
-} from '../duck';
+import { requestNowPlaying, receiveNowPlaying } from '../duck';
 
 interface INowPlayingContainerProps {
   pageNumber: string;
@@ -45,11 +41,10 @@ export const NowPlayingContainer: React.FC<INowPlayingContainerProps> = ({
 
   // fetch films data by page number
   useEffect(() => {
-    const isNeedToFetch =
-      pageNumber && isEmpty((films.map as INowPlayingMap)?.[pageNumber]);
+    const isNeedToFetch = pageNumber && isEmpty(films.map?.[pageNumber]);
 
     if (pageNumber && isNeedToFetch && !loading && !error) {
-      dispatch(fetchNowPlayingAction(pageNumber));
+      dispatch(requestNowPlaying(pageNumber));
     }
   }, [loading, films.map, pageNumber]);
 

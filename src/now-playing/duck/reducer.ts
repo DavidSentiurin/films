@@ -1,10 +1,9 @@
 import { AnyAction } from 'redux';
 import { INowPlayingFilm } from '../api';
 import {
-  GET_NOW_PLAYING,
-  LOAD_FAILD_NOW_PLAYING,
-  LOAD_NOW_PLAYING,
-  LOAD_SUCCESS_NOW_PLAYING,
+  NOW_PLAYING_REQUEST,
+  NOW_PLAYING_SUCCESS,
+  NOW_PLAYING_FAILURE,
 } from './actionTypes';
 
 export interface INowPlayingStore {
@@ -36,7 +35,15 @@ export const reducer = (
   action: AnyAction,
 ): INowPlayingStore => {
   switch (action.type) {
-    case GET_NOW_PLAYING: {
+    case NOW_PLAYING_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+        error: false,
+      };
+    }
+
+    case NOW_PLAYING_SUCCESS: {
       const { totalPages, totalResults, page, results } = action.payload;
 
       return {
@@ -49,22 +56,11 @@ export const reducer = (
           totalPages,
           totalResults,
         },
-      };
-    }
-    case LOAD_NOW_PLAYING: {
-      return {
-        ...state,
-        loading: true,
-      };
-    }
-    case LOAD_SUCCESS_NOW_PLAYING: {
-      return {
-        ...state,
         loading: false,
-        error: false,
       };
     }
-    case LOAD_FAILD_NOW_PLAYING: {
+
+    case NOW_PLAYING_FAILURE: {
       return {
         ...state,
         loading: false,

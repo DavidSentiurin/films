@@ -14,6 +14,7 @@ export default function NowPlaying() {
 
   // redirect when the path is not valid
   useEffect(() => {
+    // qs
     const isCorrectRoute = (() => {
       /**
        * Query parameters are not defined on the first render,
