@@ -4,9 +4,12 @@ module.exports = {
     return [
       {
         source: '/',
-        destination: '/now-watching',
+        destination: '/now-playing',
         permanent: false,
       },
     ]
+  },
+  images: {
+    domains: ['image.tmdb.org'],
   },
 }

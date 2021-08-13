@@ -1,0 +1,25 @@
+@use '../../../mixins' as mixins;
+
+.sign-in-wrapper {
+  @include mixins.correct-100vh-height-without-header;
+}
+
+.sign-in {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 320px;
+
+  @media (max-height: 360px) {
+    top: 5%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    padding-bottom: 30px;
+  }
+
+  &-form {
+    width: 100%;
+  }
+}

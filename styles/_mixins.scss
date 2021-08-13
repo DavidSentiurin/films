@@ -1,3 +1,5 @@
+@use './varibles' as *;
+
 @mixin text-body {
   font-size: 14px;
   line-height: 22px;
@@ -11,4 +13,11 @@
 @mixin correct-100vh-height {
   height: 100vh;
   height: calc(var(--vh, 1vh) * 100);
+}
+
+@mixin correct-100vh-height-without-header {
+  $correct-height: calc(var(--vh, 1vh) * 100);
+
+  height: calc(100vh - #{$header-height});
+  height: calc(#{$correct-height} - #{$header-height});
 }
