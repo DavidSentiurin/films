@@ -1,20 +1,11 @@
 import { IGenre } from 'src/common/api/dto';
-import {
-  IFailureFetchGenresAction,
-  IFetchGenresAction,
-  ISuccessFetchGenresAction,
-} from './actions';
+import { GenresActionTypes } from '.';
 import { TYPE_KEYS } from './actionTypes';
 
 export type IGenresData = {
   flat: IGenre[];
   map: GenresMap;
 };
-export interface IGenresState {
-  data: IGenresData;
-  loading: boolean | null;
-  error: boolean | string;
-}
 
 export type GenresMap = {
   [id: string]: string;
@@ -24,20 +15,17 @@ const initalState = {
   data: {
     flat: [],
     map: {},
-  },
-  loading: null,
-  error: false,
+  } as IGenresData,
+  loading: null as boolean | null,
+  error: false as boolean | string,
 };
 
-type ActionTypes =
-  | IFetchGenresAction
-  | ISuccessFetchGenresAction
-  | IFailureFetchGenresAction;
+export type GenresState = typeof initalState;
 
 export const reducer = (
-  state: IGenresState = initalState,
-  action: ActionTypes,
-) => {
+  state: GenresState = initalState,
+  action: GenresActionTypes,
+): GenresState => {
   switch (action.type) {
     case TYPE_KEYS.GENRES_REQUEST: {
       return {

@@ -37,7 +37,7 @@ export const NowPlayingContainer: React.FC<INowPlayingContainerProps> = ({
     if (genresStore.loading === null) {
       dispatch(fetchGenres());
     }
-  }, [genresStore.loading]);
+  }, [genresStore.loading, dispatch]);
 
   // fetch films data by page number
   useEffect(() => {
@@ -46,7 +46,7 @@ export const NowPlayingContainer: React.FC<INowPlayingContainerProps> = ({
     if (pageNumber && isNeedToFetch && !loading && !error) {
       dispatch(requestNowPlaying(pageNumber));
     }
-  }, [loading, films.map, pageNumber]);
+  }, [loading, films.map, pageNumber, error, dispatch]);
 
   const onChangePaginationHandler = (page: number) => {
     if (page && isNumber(page) && !isNaN(Number(page))) {

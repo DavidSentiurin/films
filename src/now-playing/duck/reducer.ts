@@ -1,20 +1,6 @@
+import { NowPlayingActionTypes } from './index';
 import { INowPlayingFilm } from '../api';
-import {
-  IfailureFetchNowPlayingAction,
-  IRequestNowPlayingAction,
-  ISuccessFetchNowPlayingAction,
-} from './actions';
 import { TYPE_KEYS } from './actionTypes';
-
-export interface INowPlayingStore {
-  data: {
-    map: INowPlayingMap;
-    totalPages: number;
-    totalResults: number;
-  };
-  loading: boolean | null;
-  error: boolean | string;
-}
 
 export interface INowPlayingMap {
   [pageNumber: string]: INowPlayingFilm[];
@@ -22,23 +8,20 @@ export interface INowPlayingMap {
 
 const initialState = {
   data: {
-    map: {},
+    map: {} as INowPlayingMap,
     totalPages: 0,
     totalResults: 0,
   },
-  loading: null,
-  error: false,
+  loading: null as null | boolean,
+  error: false as boolean | string,
 };
 
-type ActionTypes =
-  | IRequestNowPlayingAction
-  | ISuccessFetchNowPlayingAction
-  | IfailureFetchNowPlayingAction;
+export type NowPlayingState = typeof initialState;
 
 export const reducer = (
-  state: INowPlayingStore = initialState,
-  action: ActionTypes,
-): INowPlayingStore => {
+  state: NowPlayingState = initialState,
+  action: NowPlayingActionTypes,
+): NowPlayingState => {
   switch (action.type) {
     case TYPE_KEYS.NOW_PLAYING_REQUEST: {
       return {

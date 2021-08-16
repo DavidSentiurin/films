@@ -18,7 +18,7 @@ export const FilmCard: React.FC<IFilmCardProps> = ({
   imgConfig,
 }) => {
   return (
-    <Card cover={<Image {...imgConfig} />}>
+    <Card cover={<Image alt={imgConfig.alt} {...imgConfig} />}>
       <h6 className={styles['card-title']}>{title}</h6>
       <p className={styles['card-release']}>Release: {release}</p>
       <p className={styles['card-genres']}>Genres: {genres}</p>

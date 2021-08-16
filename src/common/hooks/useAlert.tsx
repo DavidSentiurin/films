@@ -2,7 +2,11 @@ import { message } from 'antd';
 import { ArgsProps } from 'antd/lib/message';
 import { isFunction } from 'lodash';
 
-export const useAlert = () => {
+export interface IAlert {
+  showAlert: (config: ArgsProps) => void;
+}
+
+export const useAlert = (): IAlert => {
   const showAlert = (config: ArgsProps) => {
     if (!config.content) {
       return;

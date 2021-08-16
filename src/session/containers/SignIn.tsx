@@ -9,7 +9,7 @@ import { RootState } from '../../store';
 import { REGEX } from '../../common/constants';
 import { useSession } from '../provider';
 
-export type OnFinish = (values: { username: string; password: string }) => any;
+export type OnFinish = (values: { username: string; password: string }) => void;
 
 export const SignInContainer: React.FC = () => {
   const session = useSelector((state: RootState) => state.session);
@@ -44,7 +44,7 @@ export const SignInContainer: React.FC = () => {
     if (session.requestToken.loading === null) {
       getRequestToken();
     }
-  }, [session.requestToken.loading]);
+  }, [session.requestToken.loading, getRequestToken]);
 
   const onFinish: OnFinish = (values) => {
     if (

@@ -9,10 +9,11 @@ export {
   requestTheRequestToken,
   requestSessionId,
   requestDeleteSession,
+  reqeustSessionWithLogin,
 } from './requests';
 
 export type { IUserData } from './requests';
 
-export { normalizeSessionIdRequest } from './normalize';
+export { normalizeSessionWithLoginRequest } from './normalize';
 
-export type { IRequestTokenRes, ISessionIdRes } from './dto';
+export type { IRequestTokenRes, ISessionIdRes, IDeleteSessionRes } from './dto';

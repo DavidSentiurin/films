@@ -1,5 +1,6 @@
 import { camelCase, isNumber } from 'lodash';
 
+//eslint-disable-next-line
 type Data = { [key: string]: any } | any[];
 
 export const camelizeKeys = (data: Data): Data => {
@@ -18,7 +19,10 @@ export const camelizeKeys = (data: Data): Data => {
   return data;
 };
 
-export const getImageRatio = (widthOrHeight: number, ratio: number) => {
+export const getImageRatio = (
+  widthOrHeight: number,
+  ratio: number,
+): number | undefined => {
   if (isNumber(widthOrHeight) && isNumber(ratio)) {
     return ratio * widthOrHeight;
   }

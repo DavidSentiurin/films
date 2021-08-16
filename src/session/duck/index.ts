@@ -1,7 +1,8 @@
 export { reducer } from './reducer';
 export { watcher } from './sagas';
 
-export type { ISessionIdFormData } from './actions';
+export type { ISessionIdFormData, SessionActionsTypes } from './actions';
+export type { SessionState } from './reducer';
 export {
   requestTheRequestToken,
   requestSessionId,

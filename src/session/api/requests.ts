@@ -1,22 +1,30 @@
 import { AxiosResponse } from 'axios';
-import { isEmpty } from 'lodash';
 import { Api } from 'src/common/api';
+import { IErrorRes } from 'src/common/api/dto';
 import {
   normalizeResponse,
   normalizeResponseError,
 } from 'src/common/api/utils';
+import {
+  IDeleteSessionRes,
+  IRequestTokenRes,
+  ISessionIdRes,
+  ISessionWithLoginRes,
+} from './dto';
 import {
   CREATE_SESSION,
   REQUEST_TOKEN,
   SESSION_WITH_LOGIN,
   DELETE_SESSION,
 } from './index';
-import { normalizeSessionIdRequest } from './index';
+import { normalizeSessionWithLoginRequest } from './index';
 
-export function requestTheRequestToken() {
+export function requestTheRequestToken(): Promise<
+  AxiosResponse<IRequestTokenRes | IErrorRes> | undefined
+> {
   return Api.get(REQUEST_TOKEN)
-    .then((data) => normalizeResponse(data))
-    .catch((error) => normalizeResponseError(error));
+    .then((data) => normalizeResponse<IRequestTokenRes>(data))
+    .catch((error) => normalizeResponseError<IErrorRes>(error));
 }
 
 export interface IUserData {
@@ -25,37 +33,39 @@ export interface IUserData {
   requestToken: string;
 }
 
-export function requestSessionId(userData: IUserData) {
-  // Create Session With Login
-  return Api.post(SESSION_WITH_LOGIN, normalizeSessionIdRequest(userData))
-    .then((resSessionWithLogin) => {
-      const { data } = normalizeResponse(resSessionWithLogin);
-
-      if (data.requestToken) {
-        // Create Session Id
-        return Api.post(CREATE_SESSION, {
-          request_token: userData.requestToken,
-        });
-      }
-
-      return {};
-    })
-    .then((resSessionId) => {
-      if (isEmpty(resSessionId)) {
-        return {};
-      }
-
-      return normalizeResponse(resSessionId as AxiosResponse);
-    })
-    .catch((error) => normalizeResponseError(error));
+export function reqeustSessionWithLogin(
+  userData: IUserData,
+): Promise<AxiosResponse<ISessionWithLoginRes | IErrorRes> | undefined> {
+  return Api.post(
+    SESSION_WITH_LOGIN,
+    normalizeSessionWithLoginRequest(userData),
+  )
+    .then((resSessionId) =>
+      normalizeResponse<ISessionWithLoginRes>(resSessionId),
+    )
+    .catch((error) => normalizeResponseError<IErrorRes>(error));
 }
 
-export function requestDeleteSession(sessionId: string) {
+export function requestSessionId(
+  requestToken: string,
+): Promise<AxiosResponse<ISessionIdRes | IErrorRes> | undefined> {
+  return Api.post(CREATE_SESSION, {
+    request_token: requestToken,
+  })
+    .then((resSessionWithLogin) =>
+      normalizeResponse<ISessionIdRes>(resSessionWithLogin),
+    )
+    .catch((error) => normalizeResponseError<IErrorRes>(error));
+}
+
+export function requestDeleteSession(
+  sessionId: string,
+): Promise<AxiosResponse<IDeleteSessionRes | IErrorRes> | undefined> {
   return Api.delete(DELETE_SESSION, {
     data: {
       session_id: sessionId,
     },
   })
-    .then((data) => normalizeResponse(data))
-    .catch((error) => normalizeResponseError(error));
+    .then((data) => normalizeResponse<IDeleteSessionRes>(data))
+    .catch((error) => normalizeResponseError<IErrorRes>(error));
 }

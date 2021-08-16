@@ -1,7 +1,2 @@
 export type { IGenre } from './genre';
-
-export interface ITimestamps {
-  createdAt?: Date;
-  updatedAt?: Date;
-  deletedAt?: Date | null;
-}
+export type { ITimestamps, IErrorRes } from './common';
