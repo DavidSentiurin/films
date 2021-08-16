@@ -1,1 +1,6 @@
-export type { IRequestTokenRes, ISessionIdRes } from './response';
+export type {
+  IRequestTokenRes,
+  ISessionWithLoginRes,
+  ISessionIdRes,
+  IDeleteSessionRes,
+} from './response';

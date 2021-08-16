@@ -8,16 +8,19 @@ import { normalizeResponse } from '../utils';
 export const normalizeResponseGeners = (
   data: AxiosResponse<IGenresRes>,
 ): AxiosResponse<IGenresData> => {
-  const normilizedData = normalizeResponse(data);
+  const normilizedRes = normalizeResponse<IGenresRes>(data);
 
-  normilizedData.data = {
-    flat: normilizedData.data.genres,
-    map: normilizedData.data.genres.reduce((acc: GenresMap, genre: IGenre) => {
-      acc[genre.id] = genre.name;
+  const normilizedResAndData: AxiosResponse<IGenresData> = {
+    ...normilizedRes,
+    data: {
+      flat: normilizedRes.data.genres,
+      map: normilizedRes.data.genres.reduce((acc: GenresMap, genre: IGenre) => {
+        acc[genre.id] = genre.name;
 
-      return acc;
-    }, {}),
+        return acc;
+      }, {}),
+    },
   };
 
-  return normilizedData;
+  return normilizedResAndData;
 };

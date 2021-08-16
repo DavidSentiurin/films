@@ -39,3 +39,8 @@ export const failureFetchGenres = (
     message: error,
   },
 });
+
+export type GenresActionTypes =
+  | IFetchGenresAction
+  | ISuccessFetchGenresAction
+  | IFailureFetchGenresAction;

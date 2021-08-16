@@ -1,12 +1,19 @@
 import { AxiosResponse } from 'axios';
 import { AnyAction } from 'redux';
-import { call, put, select, takeLatest } from 'redux-saga/effects';
+import { call, put, select, takeLatest, ForkEffect } from 'redux-saga/effects';
+import { IErrorRes } from 'src/common/api/dto';
 import { ERRORS } from 'src/common/constants';
 import {
   requestSessionId,
   requestTheRequestToken,
   requestDeleteSession,
+  reqeustSessionWithLogin,
 } from '../api';
+import {
+  ISessionWithLoginRes,
+  ISessionIdRes,
+  IDeleteSessionRes,
+} from '../api/dto';
 import {
   failureFetchDeleteSession,
   failureFetchRequestToken,
@@ -18,7 +25,8 @@ import {
 import { TYPE_KEYS } from './actionTypes';
 import { receiveRequestToken } from './index';
 
-export function* watcher() {
+// TODO: ask the mentor about the return type
+export function* watcher(): Generator<ForkEffect<never>, void, unknown> {
   yield takeLatest(TYPE_KEYS.REQUEST_TOKEN_REQUEST, fetchRequestTokenWorker);
   yield takeLatest(TYPE_KEYS.SESSION_ID_REQUEST, fetchSessionIdWorker);
   yield takeLatest(TYPE_KEYS.DELETE_SESSION_REQUEST, fetchDeleteSessionWorker);
@@ -26,10 +34,16 @@ export function* watcher() {
 
 function* fetchRequestTokenWorker() {
   try {
-    const { data }: AxiosResponse = yield call(requestTheRequestToken);
+    const resRequestToken:
+      | AxiosResponse<ISessionWithLoginRes | IErrorRes>
+      | undefined = yield call(requestTheRequestToken);
 
-    if (data.success) {
-      yield put(successFetchRequestToken(data));
+    if (
+      resRequestToken &&
+      'requestToken' in resRequestToken.data &&
+      resRequestToken.data.success
+    ) {
+      yield put(successFetchRequestToken(resRequestToken.data));
 
       return;
     }
@@ -43,19 +57,37 @@ function* fetchRequestTokenWorker() {
 function* fetchSessionIdWorker(action: AnyAction) {
   try {
     const requestToken: string = yield select(receiveRequestToken);
-    const { data }: AxiosResponse = yield call(requestSessionId, {
+    const resSessionWithLogin:
+      | AxiosResponse<ISessionWithLoginRes | IErrorRes>
+      | undefined = yield call(reqeustSessionWithLogin, {
       ...action.payload,
-      requestToken: requestToken,
+      requestToken,
     });
 
-    if (data.success) {
-      yield put(successFetchSessionId(data));
+    // Success response session with login
+    if (resSessionWithLogin && 'requestToken' in resSessionWithLogin.data) {
+      const resSessionId: AxiosResponse<ISessionIdRes | IErrorRes> | undefined =
+        yield call(requestSessionId, requestToken);
 
-      return;
+      if (resSessionId && 'sessionId' in resSessionId.data) {
+        yield put(successFetchSessionId(resSessionId.data));
+
+        return;
+      }
     }
 
-    if (data.statusCode === 30 || data.statusCode === 32) {
-      yield put(failureFetchSessionId(data.statusMessage || ERRORS.GENERAL));
+    // Failure response session with login with statusCode
+    if (
+      resSessionWithLogin &&
+      'statusCode' in resSessionWithLogin.data &&
+      (resSessionWithLogin.data.statusCode === 30 ||
+        resSessionWithLogin.data.statusCode === 32)
+    ) {
+      yield put(
+        failureFetchSessionId(
+          resSessionWithLogin.data.statusMessage || ERRORS.GENERAL,
+        ),
+      );
 
       return;
     }
@@ -68,10 +100,12 @@ function* fetchSessionIdWorker(action: AnyAction) {
 
 function* fetchDeleteSessionWorker(action: AnyAction) {
   try {
-    const { data }: AxiosResponse = yield requestDeleteSession(action.payload);
+    const resDeleteSession:
+      | AxiosResponse<IDeleteSessionRes | IErrorRes>
+      | undefined = yield call(requestDeleteSession, action.payload);
 
-    if (data.success) {
-      yield put(successFetchDeleteSession(data.success));
+    if (resDeleteSession && resDeleteSession.data.success) {
+      yield put(successFetchDeleteSession(resDeleteSession.data.success));
 
       return;
     }

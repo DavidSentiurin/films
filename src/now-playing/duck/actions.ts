@@ -37,3 +37,8 @@ export const failureFetchNowPlaying = (
   type: TYPE_KEYS.NOW_PLAYING_FAILURE,
   payload: { message },
 });
+
+export type NowPlayingActionTypes =
+  | IRequestNowPlayingAction
+  | ISuccessFetchNowPlayingAction
+  | IfailureFetchNowPlayingAction;

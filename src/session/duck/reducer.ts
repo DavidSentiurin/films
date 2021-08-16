@@ -1,60 +1,26 @@
 import moment from 'moment';
 import { TYPE_KEYS } from './actionTypes';
-import {
-  IFailureFetchDeleteSessionAction,
-  IFailureFetchRequestTokenAction,
-  IFailureFetchSessionIdAction,
-  IRequestDeleteSessionAction,
-  IRequestSessionIdAction,
-  IRequestTheRequestTokenAction,
-  ISetSessionIdDataAction,
-  ISuccessFetchDeleteSessionAction,
-  ISuccessFetchRequestTokenAction,
-  ISuccessFetchSessionIdAction,
-} from './actions';
-
-export interface ISessionState {
-  session: {
-    data: {
-      id: string;
-      expireAt: string;
-    };
-    // loading: null is initial loading.
-    loading: boolean | null;
-    error: string | boolean;
-  };
-  requestToken: {
-    data: string;
-    // loading: null is initial loading.
-    loading: boolean | null;
-    error: string | boolean;
-  };
-  deleteSession: {
-    data: boolean | null;
-    loading: boolean | null;
-    error: string | boolean;
-  };
-}
+import { ISessionIdData, SessionActionsTypes } from './actions';
 
 const requestTokenInital = {
   data: '',
-  loading: null,
-  error: false,
+  loading: null as boolean | null,
+  error: false as boolean | string,
 };
 
 const sessionInitial = {
   data: {
     id: '',
     expireAt: '',
-  },
-  loading: null,
-  error: false,
+  } as ISessionIdData,
+  loading: null as boolean | null,
+  error: false as boolean | string,
 };
 
 const deleteSessionInitial = {
-  data: null,
-  loading: null,
-  error: false,
+  data: null as boolean | null,
+  loading: null as boolean | null,
+  error: false as boolean | string,
 };
 
 const initialState = {
@@ -63,22 +29,12 @@ const initialState = {
   deleteSession: deleteSessionInitial,
 };
 
-type ActionsTypes =
-  | IRequestTheRequestTokenAction
-  | ISuccessFetchRequestTokenAction
-  | IFailureFetchRequestTokenAction
-  | IRequestSessionIdAction
-  | ISuccessFetchSessionIdAction
-  | IFailureFetchSessionIdAction
-  | ISetSessionIdDataAction
-  | IRequestDeleteSessionAction
-  | ISuccessFetchDeleteSessionAction
-  | IFailureFetchDeleteSessionAction;
+export type SessionState = typeof initialState;
 
 export const reducer = (
-  state: ISessionState = initialState,
-  action: ActionsTypes,
-): ISessionState => {
+  state: SessionState = initialState,
+  action: SessionActionsTypes,
+): SessionState => {
   switch (action.type) {
     case TYPE_KEYS.REQUEST_TOKEN_REQUEST: {
       return {
@@ -158,14 +114,14 @@ export const reducer = (
       };
     }
     case TYPE_KEYS.SET_SESSION_ID: {
-      const { sessionId, expireAt } = action.payload;
+      const { id, expireAt } = action.payload;
 
       return {
         ...state,
         session: {
           ...state.session,
           data: {
-            id: sessionId,
+            id,
             expireAt,
           },
         },

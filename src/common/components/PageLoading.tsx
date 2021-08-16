@@ -10,7 +10,7 @@ export const PageLoading = ({
   spinConfig = {
     size: 'large',
   },
-}: IPageLoadingProps) => {
+}: IPageLoadingProps): JSX.Element => {
   return (
     <div className={styles['page_loading']}>
       <Spin {...spinConfig} />

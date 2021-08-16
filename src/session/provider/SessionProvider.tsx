@@ -60,7 +60,7 @@ export const SessionProvider: React.FC = ({ children }) => {
     }
 
     setIsAuthorized(false);
-  }, []);
+  }, [dispatch, session.id]);
 
   // when we are logged in, we set the sessionId in the cookie
   useEffect(() => {
@@ -131,7 +131,7 @@ function useGuard(isAuthorized: IsAuthorized) {
         router.replace(redirect);
       }
     }
-  }, [isAuthorized, router.pathname]);
+  }, [router, defaultRedirect, isAuthorized, router.pathname]);
 }
 
 function useSessionObserver(
@@ -157,9 +157,9 @@ function useSessionObserver(
         clearInterval(removeId.current);
       }
     };
-  }, [sessionId, expireAt]);
+  }, [signOut, sessionId, expireAt]);
 }
 
-export const useSession = () => {
+export const useSession = (): ISession => {
   return useContext(SessionContext);
 };
