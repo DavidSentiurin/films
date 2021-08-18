@@ -1,41 +1,32 @@
+import React, { useEffect } from 'react';
 import Head from 'next/head';
+import { isArray } from 'lodash';
+import { useRouter } from 'next/router';
+import { useSession } from 'src/session/provider';
 import { ROUTES } from 'src/common/constants';
 import { NowPlayingContainer } from 'src/now-playing/containers';
-import { useEffect } from 'react';
-import { useSession } from 'src/session/provider';
-import { useRouter } from 'next/router';
-import { isArray } from 'lodash';
+import qs from 'qs';
 
-export default function NowPlaying() {
+export default function NowPlaying(): JSX.Element {
   const router = useRouter();
   const { isAuthorized } = useSession();
   const { page } = router.query;
-  const validPage = page && !isArray(page) && !isNaN(Number(page)) ? page : '';
+  const validPage =
+    page && !isArray(page) && !isNaN(Number(page)) && Number(page) > 0
+      ? page
+      : '';
 
   // redirect when the path is not valid
   useEffect(() => {
-    // qs
-    const isCorrectRoute = (() => {
-      /**
-       * Query parameters are not defined on the first render,
-       * so we use URLSearchParams to get parameters on the first render.
-       * Details: https://nextjs.org/docs/routing/dynamic-routes#caveats
-       */
-      const urlSearchParams = new URLSearchParams(window.location.search);
-      const params = Object.fromEntries(urlSearchParams.entries());
-      const pageNumber = Number(params.page);
+    const indexOfQueryStart = router.asPath.indexOf('?');
+    const params = qs.parse(router.asPath.slice(indexOfQueryStart + 1));
 
-      if (pageNumber && 'page' in params && !isNaN(pageNumber)) {
-        return true;
-      }
+    if (!params.page || (Number(params.page) === 0 && isAuthorized)) {
+      params.page = '1';
 
-      return false;
-    })();
-
-    if (!isCorrectRoute && isAuthorized) {
-      router.replace(`${ROUTES.NOW_PLAYING.PATH}?${ROUTES.NOW_PLAYING.PARAMS}`);
+      router.replace(`${ROUTES.NOW_PLAYING.PATH}?${qs.stringify(params)}`);
     }
-  }, [isAuthorized]);
+  }, [router, validPage, isAuthorized]);
 
   // when we go to the next pagination route, scroll to the top main container
   useEffect(() => {
